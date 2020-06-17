@@ -101,4 +101,28 @@ public class ExpenseControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void updateExpense_ShouldUpdateSuccessfully() throws Exception{
+        ExpenseDto expenseDto = TestModels.createExpenseDto();
+        Long expenseId = 1L;
+
+        given(expenseService.updateExpenseById(expenseId, expenseDto))
+                .willReturn(new Expense(expenseId, "food", "Lagos", 5.5));
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/expense/{expense_id}", expenseId).contentType("application/json").content(asJsonString(expenseDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(".message").value("Expense updated successfully"));
+    }
+
+    @Test
+    void updateExpense_ShouldThrowExceptionWhenIdDoesNotExist() throws Exception{
+        ExpenseDto expenseDto = TestModels.createExpenseDto();
+        Long expenseId = 1L;
+
+        given(expenseService.updateExpenseById(expenseId, expenseDto))
+                .willThrow(new ResourceNotFoundException("Expense with such Id does not Exist"));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/expense/{expense_id}", expenseId).contentType("application/json").content(asJsonString(expenseDto)))
+                .andExpect(status().isNotFound());
+    }
+
 }

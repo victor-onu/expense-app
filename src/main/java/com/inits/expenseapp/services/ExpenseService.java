@@ -13,4 +13,6 @@ public interface ExpenseService {
     Expense viewExpenseById(Long expenseId);
 
     Collection<Expense> findAllExpenses();
+
+    Expense updateExpenseById(Long expenseId, ExpenseDto expenseDto);
 }

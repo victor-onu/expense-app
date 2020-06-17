@@ -54,5 +54,14 @@ public class ExpenseController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PutMapping("/expense/{expense_id}")
+    public ResponseEntity<ApiResponse<Expense>> updateExpense(@PathVariable Long expense_id, @Valid @RequestBody ExpenseDto expenseDto){
+        Expense updatedExpense = expenseService.updateExpenseById(expense_id, expenseDto);
+        ApiResponse<Expense> response = new ApiResponse<>(HttpStatus.OK);
+        response.setMessage("Expense updated successfully");
+        response.setData(updatedExpense);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
 }

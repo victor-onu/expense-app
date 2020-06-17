@@ -13,11 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -97,6 +95,38 @@ public class ExpenseServiceTest {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    void updateExpense_ShouldUpdateSuccessfully() throws Exception{
+        ExpenseDto expenseDto = TestModels.createExpenseDto();
+        Long expenseId = 1L;
+        Expense expense = new Expense(expenseId, "food", "Lagos", 5.5);
+
+        given(expenseRepository.findById(expenseId)).willReturn(java.util.Optional.of(expense));
+        given(expenseRepository.save(expense)).willReturn(expense);
+
+        Expense updatedExpense = expenseService.updateExpenseById(expense.getId(), expenseDto);
+
+        assertThat(updatedExpense).isNotNull();
+        verify(expenseRepository).save(any(Expense.class));
+    }
+
+    @Test
+    void updateExpense_ShouldThrowResourceNotFoundWhenIdDoesNotExist() throws Exception{
+        ExpenseDto expenseDto = TestModels.createExpenseDto();
+        Long expenseId = 1L;
+        Expense expense = new Expense(expenseId, "food", "Lagos", 5.5);
+
+        when(expenseRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+            expenseService.updateExpenseById(anyLong(), expenseDto);
+        });
+        String expectedError = "Expense with such Id does not Exist";
+        String actualMessage = exception.getLocalizedMessage();
+        assertTrue(actualMessage.contains(expectedError));
+    }
+
+
 
 
 

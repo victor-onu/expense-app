@@ -43,4 +43,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         }
         return allExpenses;
     }
+
+    @Override
+    public Expense updateExpenseById(Long expenseId, ExpenseDto expenseDto) {
+        return expenseRepository.findById(expenseId).map(expense -> {
+            expense.setAmount(expenseDto.getAmount());
+            expense.setDescription(expenseDto.getDescription());
+            expense.setLocation(expenseDto.getLocation());
+            return expenseRepository.save(expense);
+        }).orElseThrow(() -> new ResourceNotFoundException("Expense with such Id does not Exist"));
+    }
 }
