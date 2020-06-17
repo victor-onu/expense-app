@@ -1,6 +1,7 @@
 package com.inits.expenseapp.services;
 
 import com.inits.expenseapp.dtos.ExpenseDto;
+import com.inits.expenseapp.exceptions.ResourceNotFoundException;
 import com.inits.expenseapp.models.Expense;
 import com.inits.expenseapp.repositories.ExpenseRepository;
 import org.modelmapper.ModelMapper;
@@ -22,5 +23,12 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = new Expense();
         this.modelMapper.map(expenseDto, expense);
         return expenseRepository.save(expense);
+    }
+
+    @Override
+    public Expense viewExpenseById(Long expenseId) {
+        return expenseRepository.findById(expenseId).orElseThrow(
+                () -> new ResourceNotFoundException("Expense with such Id does not exist")
+        );
     }
 }

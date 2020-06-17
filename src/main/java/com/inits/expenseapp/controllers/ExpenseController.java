@@ -8,10 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -29,13 +26,22 @@ public class ExpenseController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("expense")
+    @PostMapping("/expense")
     public ResponseEntity<ApiResponse<Expense>> addExpense(@Valid @RequestBody ExpenseDto expenseDto){
         Expense newExpense = expenseService.createExpense(expenseDto);
         ApiResponse<Expense> response = new ApiResponse<>(HttpStatus.OK);
         response.setMessage("Expense added successfully");
         response.setData(newExpense);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/expense/{expense_id}")
+    public ResponseEntity<ApiResponse<Expense>> viewOneExpense(@PathVariable Long expense_id){
+        Expense expense = expenseService.viewExpenseById(expense_id);
+        ApiResponse<Expense> response = new ApiResponse<>(HttpStatus.OK);
+        response.setMessage("Expense retrieved successfully");
+        response.setData(expense);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
