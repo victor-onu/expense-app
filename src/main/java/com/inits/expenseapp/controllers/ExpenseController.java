@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("api")
@@ -41,6 +42,15 @@ public class ExpenseController {
         ApiResponse<Expense> response = new ApiResponse<>(HttpStatus.OK);
         response.setMessage("Expense retrieved successfully");
         response.setData(expense);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/expense")
+    public ResponseEntity<ApiResponse<Collection<Expense>>> getAllExpenses(){
+        Collection<Expense> allExpenses = expenseService.findAllExpenses();
+        ApiResponse<Collection<Expense>> response = new ApiResponse<>(HttpStatus.OK);
+        response.setMessage("All expenses retrieved successfully");
+        response.setData(allExpenses);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

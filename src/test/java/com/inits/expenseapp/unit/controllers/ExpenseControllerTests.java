@@ -17,6 +17,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.inits.expenseapp.utils.TestUtils.asJsonString;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -72,6 +76,29 @@ public class ExpenseControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/expense/{expense_id}", expenseId))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Expense with such Id does not exist"));
+    }
+
+    @Test
+    void getAllExpenses_ShouldReturnAllExpenses() throws Exception{
+        Expense expense1 = new Expense(1L, "food", "Lagos", 5.5);
+        Expense expense2 = new Expense(2L, "fuel", "Lagos", 3.5);
+
+        List<Expense> expenseList = new ArrayList<>(Arrays.asList(expense1, expense2));
+
+        given(expenseService.findAllExpenses()).willReturn(expenseList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(".message").value("All expenses retrieved successfully"))
+                .andExpect(jsonPath("$.data").isNotEmpty());
+    }
+
+    @Test
+    void getAllExpenses_WhenEmpty() throws Exception{
+        given(expenseService.findAllExpenses()).willThrow(new ResourceNotFoundException("Expense list empty"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(path))
+                .andExpect(status().isNotFound());
     }
 
 }

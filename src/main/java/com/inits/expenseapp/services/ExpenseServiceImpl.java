@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 @Transactional
 public class ExpenseServiceImpl implements ExpenseService {
@@ -30,5 +33,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         return expenseRepository.findById(expenseId).orElseThrow(
                 () -> new ResourceNotFoundException("Expense with such Id does not exist")
         );
+    }
+
+    @Override
+    public Collection<Expense> findAllExpenses() {
+        List<Expense> allExpenses = expenseRepository.findAll();
+        if (allExpenses.isEmpty()){
+            throw new ResourceNotFoundException("Expense list empty");
+        }
+        return allExpenses;
     }
 }
