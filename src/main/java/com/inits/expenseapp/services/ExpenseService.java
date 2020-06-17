@@ -15,4 +15,6 @@ public interface ExpenseService {
     Collection<Expense> findAllExpenses();
 
     Expense updateExpenseById(Long expenseId, ExpenseDto expenseDto);
+
+    Expense deleteExpenseById(Long expense_id);
 }

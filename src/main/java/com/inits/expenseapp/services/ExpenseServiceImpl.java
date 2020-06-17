@@ -53,4 +53,12 @@ public class ExpenseServiceImpl implements ExpenseService {
             return expenseRepository.save(expense);
         }).orElseThrow(() -> new ResourceNotFoundException("Expense with such Id does not Exist"));
     }
+
+    @Override
+    public Expense deleteExpenseById(Long expense_id) {
+        return expenseRepository.findById(expense_id).map(expense -> {
+            expenseRepository.deleteById(expense_id);
+            return expense;
+        }).orElseThrow(() -> new ResourceNotFoundException("Expense with such Id does not Exist"));
+    }
 }

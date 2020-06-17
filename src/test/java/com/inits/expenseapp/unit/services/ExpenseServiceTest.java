@@ -126,6 +126,32 @@ public class ExpenseServiceTest {
         assertTrue(actualMessage.contains(expectedError));
     }
 
+    @Test
+    void deleteExpense_ShouldDeleteSuccessfully() throws Exception{
+        ExpenseDto expenseDto = TestModels.createExpenseDto();
+        Long expenseId = 1L;
+        Expense expense = new Expense(expenseId, "food", "Lagos", 5.5);
+
+        given(expenseRepository.findById(expenseId)).willReturn(java.util.Optional.of(expense));
+        Expense deletedExpense = expenseService.deleteExpenseById(expenseId);
+        assertThat(deletedExpense).isNotNull();
+        verify(expenseRepository).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteExpense_ShouldThrowExceptionWhenExpenseDoesNotExist() throws Exception{
+        Long expenseId = 1L;
+        Expense expense = new Expense(expenseId, "food", "Lagos", 5.5);
+
+        when(expenseRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+            expenseService.deleteExpenseById(anyLong());
+        });
+        String expectedError = "Expense with such Id does not Exist";
+        String actualMessage = exception.getLocalizedMessage();
+        assertTrue(actualMessage.contains(expectedError));
+    }
+
 
 
 

@@ -125,4 +125,23 @@ public class ExpenseControllerTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void deleteExpense_ShouldDeleteSuccessfully() throws Exception{
+        Long expenseId = 1L;
+        Expense expense = new Expense(expenseId, "food", "Lagos", 5.5);
+
+        given(expenseService.deleteExpenseById(expenseId)).willReturn(expense);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/expense/{expense_id}", expenseId))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteExpense_ShouldThrowExceptionWhenIdDoesNotExist() throws Exception{
+        given(expenseService.deleteExpenseById(anyLong())).willThrow(new ResourceNotFoundException("Expense with such Id does not exist"));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/expense/{expense_id}", anyLong()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Expense with such Id does not exist"));
+    }
+
 }
