@@ -61,4 +61,9 @@ public class ExpenseServiceImpl implements ExpenseService {
             return expense;
         }).orElseThrow(() -> new ResourceNotFoundException("Expense with such Id does not Exist"));
     }
+
+    @Override
+    public Double addAllExpenses() {
+        return expenseRepository.sumExpenses();
+    }
 }

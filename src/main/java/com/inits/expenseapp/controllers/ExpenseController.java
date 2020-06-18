@@ -71,4 +71,13 @@ public class ExpenseController {
         response.setData(deletedExpense);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/expense/total")
+    public ResponseEntity<ApiResponse<Double>> totalExpenses(){
+        Double totalExpenses = expenseService.addAllExpenses();
+        ApiResponse<Double> response = new ApiResponse<>(HttpStatus.OK);
+        response.setMessage("Expense added successfully: Total expenses is " +totalExpenses);
+        response.setData(totalExpenses);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

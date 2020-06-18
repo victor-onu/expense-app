@@ -17,4 +17,6 @@ public interface ExpenseService {
     Expense updateExpenseById(Long expenseId, ExpenseDto expenseDto);
 
     Expense deleteExpenseById(Long expense_id);
+
+    Double addAllExpenses();
 }
