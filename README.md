@@ -75,6 +75,11 @@ A Java/Springboot-based REST API for managing expenses
 **Deletes an expenses from the database by specifying the Id**
 
 	http://localhost:8080/api/expense/1
+	
+# GET
+**Gets the sum of all the expenses**
+
+	http://localhost:8080/api/expense/total
 
 # Requests
 
